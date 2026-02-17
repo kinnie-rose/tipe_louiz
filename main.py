@@ -4,6 +4,7 @@ import argparse
 import os
 import sys
 import json
+import csv
 import numpy as np
 
 from analyze_images import analyze_test_tube
@@ -38,4 +39,11 @@ for index_tube, tube in enumerate(config["test_tubes"]):
         )
     data[index_tube] = tube_levels.copy()
 
+
 print(data)
+
+
+with open(os.path.join(IMAGE_DIRECTORY_PATH, "output.csv"), "w", newline="") as csvfile:
+    writer = csv.writer(csvfile)
+    for index_tube, tube in enumerate(config["test_tubes"]):
+        writer.writerow([tube] + list(data[index_tube]))

@@ -1,0 +1,7 @@
+{
+  "test_tubes": ["tb1"],
+  "tb1": {
+    "tube_borders": [[320, 430], [150, 300]],
+    "x_coordonates": [50, 60, 70]
+  }
+}

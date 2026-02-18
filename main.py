@@ -2,7 +2,6 @@
 
 import argparse
 import os
-import sys
 import json
 import csv
 import numpy as np
@@ -21,6 +20,8 @@ IMAGE_DIRECTORY_PATH = args.images_directory_path
 
 
 images = os.listdir(IMAGE_DIRECTORY_PATH)
+if not "config.json" in images:
+    raise Exception("missing a .json file in images directory")
 images.remove("config.json")
 images = [os.path.join(IMAGE_DIRECTORY_PATH, i) for i in images]
 frames_nb = len(images)

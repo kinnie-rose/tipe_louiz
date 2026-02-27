@@ -1,8 +1,11 @@
 import numpy as np
 import cv2
+import matplotlib.pyplot as plt
+
+# from scipy.ndimage import gaussian_filter1d
 
 
-IMAGE_PATH = "/media/kinnie-rose/Data/code/python/tipe_lmleq/Image16.bmp"
+IMAGE_PATH = "/media/kinnie-rose/Data/code/python/tipe_lmleq/IMAGES/Image16.bmp"
 
 
 def determine_level_for_an_x(image, x):
@@ -12,8 +15,9 @@ def determine_level_for_an_x(image, x):
 
     # normalisation entre 0 et 1
     norm = (colors - min_val) / (max_val - min_val)
+    # norm = gaussian_filter1d(norm, sigma=2) # à voir si nécessaire
 
-    gradient = np.diff(norm)
+    gradient = np.diff(norm)  # + 1 ???!!
     # gradient = gradient[gradient < 0] # à voir si nécessaire
 
     seuil_gradient = np.mean(gradient) - 2 * np.std(gradient)  # cf explications
@@ -25,7 +29,7 @@ def determine_level_for_an_x(image, x):
     transitions = list(filter(lambda x: abs(x - mean) < 0.2 * shape_y, transitions))
     """
 
-    return np.mean(transitions)
+    return np.mean(transitions)  # ou transitions
 
 
 def analyze_test_tube(image_path, tube_borders, x_coordonates):
@@ -44,7 +48,7 @@ def analyze_test_tube(image_path, tube_borders, x_coordonates):
 
     level = []
     for x in x_coordonates:
-        level.append(determine_level_for_an_x(image, x))
+        level.append(determine_level_for_an_x(image, x))  # ou extend
 
     return np.mean(level)
 

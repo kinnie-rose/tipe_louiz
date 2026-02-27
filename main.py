@@ -6,6 +6,7 @@ import json
 import csv
 import numpy as np
 
+from generate_config_file import generate_json
 from analyze_images import analyze_test_tube
 
 
@@ -17,18 +18,22 @@ parser.add_argument(
 
 args = parser.parse_args()
 IMAGE_DIRECTORY_PATH = args.images_directory_path
+CONFIG_FILE_PATH = os.path.join(IMAGE_DIRECTORY_PATH, "config.json")
 
 
 images = os.listdir(IMAGE_DIRECTORY_PATH)
-if not "config.json" in images:
-    raise Exception("missing a .json file in images directory")
-images.remove("config.json")
-images = [os.path.join(IMAGE_DIRECTORY_PATH, i) for i in images]
+if "output.csv" in images:
+    raise Exception("there is an output.csv file in the images directory")
+
+images = [os.path.join(IMAGE_DIRECTORY_PATH, i) for i in images if i != "config.json"]
+
+if not os.path.isfile(CONFIG_FILE_PATH):
+    config = generate_json(CONFIG_FILE_PATH, images[0])
+else:
+    with open(CONFIG_FILE_PATH, "r") as file:
+        config = json.load(file)
+
 frames_nb = len(images)
-
-
-with open(os.path.join(IMAGE_DIRECTORY_PATH, "config.json"), "r") as file:
-    config = json.load(file)
 
 
 data = np.zeros((len(config["test_tubes"]), frames_nb))

@@ -41,7 +41,11 @@ for index_tube, tube in enumerate(config["test_tubes"]):
     tube_levels = np.zeros(frames_nb)
     for index_image, image in enumerate(images):
         tube_levels[index_image] = analyze_test_tube(
-            image, config[tube]["tube_borders"], config[tube]["x_coordonates"]
+            image,
+            config[tube]["tube_borders"],
+            config[tube]["x_coordonates"],
+            config["scale"],
+            config["origin"],
         )
     data[index_tube] = tube_levels.copy()
 

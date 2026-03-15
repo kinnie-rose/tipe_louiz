@@ -32,7 +32,7 @@ def determine_level_for_an_x(image, x):
     return np.mean(transitions)  # ou transitions
 
 
-def analyze_test_tube(image_path, tube_borders, x_coordonates):
+def analyze_test_tube(image_path, tube_borders, x_coordonates, scale, origin):
     image = cv2.imread(cv2.samples.findFile(image_path), cv2.IMREAD_GRAYSCALE)
     # x = 1024, y =768
 
@@ -50,8 +50,8 @@ def analyze_test_tube(image_path, tube_borders, x_coordonates):
     for x in x_coordonates:
         level.append(determine_level_for_an_x(image, x))  # ou extend
 
-    return np.mean(level)
+    return (origin - (np.mean(level) + tube_borders[0][0])) * scale
 
 
 if __name__ == "__main__":
-    print(analyze_test_tube(IMAGE_PATH, ((320, 430), (150, 300)), (50, 60, 70)))
+    print(analyze_test_tube(IMAGE_PATH, ((320, 430), (150, 300)), (50, 60, 70), 0.065, 442.929))

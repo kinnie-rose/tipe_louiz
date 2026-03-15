@@ -7,7 +7,7 @@ def generate_json(config_file_path, image):
     IMAGE = cv2.imread(cv2.samples.findFile(image), cv2.IMREAD_GRAYSCALE)
 
     nb_tubes = int(input("combien de tubes : "))
-    questions = ["equerre à 0 cm", "equerre à 5 cm"] + [
+    questions = ["equerre à 0 cm (aussi le 0 pour les tubes)", "equerre à 5 cm"] + [
         "haut gauche du tube",
         "bas droite du tube",
     ] * nb_tubes
@@ -38,6 +38,7 @@ def generate_json(config_file_path, image):
 
     # calcul de l'échelle en cm/pixel
     data["scale"] = 5 / (values[0][1] - values[1][1])
+    data["origin"] = values[0][1]
 
     # données sur les tubes
     values = values[2:]

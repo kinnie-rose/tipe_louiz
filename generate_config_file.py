@@ -4,10 +4,10 @@ import cv2
 
 
 def generate_json(config_file_path, image):
-    IMAGE = cv2.imread(cv2.samples.findFile(image), cv2.IMREAD_GRAYSCALE)
+    IMAGE = cv2.imread(cv2.samples.findFile(image))
 
     nb_tubes = int(input("combien de tubes : "))
-    questions = ["equerre à 0 cm (aussi le 0 pour les tubes)", "equerre à 5 cm"] + [
+    questions = ["equerre à 0 cm", "equerre à 5 cm", "bas des eprouvettes"] + [
         "haut gauche du tube",
         "bas droite du tube",
     ] * nb_tubes
@@ -16,7 +16,7 @@ def generate_json(config_file_path, image):
     i = 0
 
     fig, ax = plt.subplots()
-    ax.imshow(IMAGE, cmap="gray")
+    ax.imshow(IMAGE)
 
     def onclick(event):
         nonlocal i, values
@@ -38,10 +38,10 @@ def generate_json(config_file_path, image):
 
     # calcul de l'échelle en cm/pixel
     data["scale"] = 5 / (values[0][1] - values[1][1])
-    data["origin"] = values[0][1]
+    data["origin"] = values[2][1]
 
     # données sur les tubes
-    values = values[2:]
+    values = values[3:]
     data["test_tubes"] = ["tb" + str(i + 1) for i in range(len(values) // 2)]
 
     i = 0
@@ -76,6 +76,7 @@ def generate_json(config_file_path, image):
 
         i += 2
 
+    # enregistrement de la configuration
     with open(config_file_path, "w") as file:
         json.dump(data, file)
 

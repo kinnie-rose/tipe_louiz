@@ -9,7 +9,7 @@ import numpy as np
 from generate_config_file import generate_json
 from analyze_images import analyze_test_tube
 
-
+# création d'une liste contenant les chemins vers les images
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "images_directory_path",
@@ -27,32 +27,31 @@ if "output.csv" in images:
 
 images = [os.path.join(IMAGE_DIRECTORY_PATH, i) for i in images if i != "config.json"]
 
+# création du fichier de configuration
 if not os.path.isfile(CONFIG_FILE_PATH):
     config = generate_json(CONFIG_FILE_PATH, images[0])
 else:
     with open(CONFIG_FILE_PATH, "r") as file:
         config = json.load(file)
 
-frames_nb = len(images)
 
-
-data = np.zeros((len(config["test_tubes"]), frames_nb))
+# analyse des images
+data = np.zeros((len(config["test_tubes"]), len(images)))
 for index_tube, tube in enumerate(config["test_tubes"]):
-    tube_levels = np.zeros(frames_nb)
     for index_image, image in enumerate(images):
-        tube_levels[index_image] = analyze_test_tube(
+        data[index_tube, index_image] = analyze_test_tube(
             image,
             config[tube]["tube_borders"],
             config[tube]["x_coordonates"],
             config["scale"],
             config["origin"],
         )
-    data[index_tube] = tube_levels.copy()
 
 
 print(data)
 
 
+# enregistrement des données dans un fichier csv
 with open(os.path.join(IMAGE_DIRECTORY_PATH, "output.csv"), "w", newline="") as csvfile:
     writer = csv.writer(csvfile)
     for index_tube, tube in enumerate(config["test_tubes"]):
